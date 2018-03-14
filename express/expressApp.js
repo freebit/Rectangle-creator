@@ -5,16 +5,30 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 
-const mainRoutes = require('./routes/main');
+
+const apiRoutes = require('./routes/api');
 const app = express();
+
+const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
+
+mongoose.connect('mongodb://r-creator:r-creator@ds213759.mlab.com:13759/rectangle-creator', { 
+  promiseLibrary: mongoose.Promise 
+})
+  .then(() =>  console.log('mongodb connection succesful'))
+  .catch((err) => console.error(err));
+
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({'extended':'false'}));
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, '../dist')));
+
+app.set('view engine', 'html');
 
 app.use('/', express.static(path.join(__dirname, '../dist')));
-//app.use('/', mainRoutes);
+
+app.use('/rectangle', apiRoutes);
 
 // обработка 404
 app.use((req, res, next) => {
