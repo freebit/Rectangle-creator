@@ -13,7 +13,6 @@ router.get('/all', (req, res, next) => {
 
 // создаем прямоугольник
 router.post('/', (req, res, next) => {
-  console.log(req.body);
   Rectangle.create(req.body, (err, post) => {
     if (err) return next(err);
     res.json(post);

@@ -24,9 +24,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({'extended':'false'}));
 app.use(express.static(path.join(__dirname, '../dist')));
 
-app.set('view engine', 'html');
-
 app.use('/', express.static(path.join(__dirname, '../dist')));
+
+// разрешим CORS
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+  res.header("Access-Control-Allow-Headers", "json, X_REQUESTED_WITH, Content-Type");
+  next();
+});
 
 app.use('/rectangle', apiRoutes);
 
@@ -39,7 +44,7 @@ app.use((req, res, next) => {
 
 
 // рендерим ошибки во время dev
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
 
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -47,5 +52,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;

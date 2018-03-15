@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Rectangles from '@/components/rectangles/Rectangles'
+import Desktop from '@/components/desktop/Desktop.vue'
 
 Vue.use(Router)
 
@@ -9,7 +9,7 @@ export default new Router({
     {
       path: '/',
       name: 'MainPage',
-      component: Rectangles
+      component: Desktop
     }
   ]
 })
