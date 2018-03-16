@@ -6,7 +6,8 @@ let RectangleSchema = new mongoose.Schema({
   positionY: {type: String, default: "0"},
   width: {type: String, default: "0"},
   height: {type: String, default: "0"},
-  backgroundColor: String
+  backgroundColor: String,
+  active: {type: Boolean, default: false}
 });
 
 

@@ -10,8 +10,8 @@ export default {
       id: (() => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15))(),
       positionX: x,
       positionY: y,
-      width: 10,
-      height: 10,
+      width: 0,
+      height: 0,
       backgroundColor: (() => '#' + Math.random().toString(16).slice(2, 8))(),
       active: false,
       deleted: false

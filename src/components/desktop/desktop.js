@@ -27,13 +27,14 @@ export default {
       // второй клик
       } else { 
         this.drawnRectangle = null  
+        this.saveRectangle()
       }
     },
 
     drawRectangle (evt) {
       if (!this.drawnRectangle) return
       
-      const indent = 5 // отступ от указателя мыши, что бы исключить клик по прямоугольнику
+      const indent = 9 // отступ от указателя мыши, что бы исключить клик по прямоугольнику
       const deltaX = evt.offsetX - parseInt(this.drawnRectangle.positionX)
       const deltaY = evt.offsetY - parseInt(this.drawnRectangle.positionY)
 
@@ -43,7 +44,7 @@ export default {
 
     adjustData (data) {
       return data.map((rect) => {
-        // расширяем объекты недостающими свойствами
+        // расширяем объекты недостающими клиентскими свойствами
         return Object.assign({}, rect, omit(Rectangle.data(), Object.keys(rect)))
       })
     },
@@ -70,10 +71,6 @@ export default {
       }
     },
 
-    deleteRectangles () {
-      this.rectangleList = this.rectangleList.filter((rect) => !rect.active)
-    },
-
     initKeyEventHandler () {
       document.onkeydown = (evt) => {
         const event = evt || window.event
@@ -84,17 +81,51 @@ export default {
           this.deleteRectangles()
         }
       }
+    },
+
+    fetchAllRectangles () {
+      axios.get('http://localhost:3000/rectangle/all')
+        .then(res => {
+          this.rectangleList = this.adjustData(res.data)
+        })
+        .catch(err => console.log(err))
+    },
+
+    saveRectangle () {
+      const lastRectangle = this.rectangleList.slice(-1)[0]
+      
+      axios.post('http://localhost:3000/rectangle', lastRectangle)
+        .then((res) => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+
+    deleteRectangles () {
+      const deletedRectangles = []
+      this.rectangleList = this.rectangleList.filter(rect => {
+        if (rect.active) {
+          deletedRectangles.push(rect.id)
+          return false
+        } else {
+          return true
+        }
+      })
+      
+      axios.delete(`http://localhost:3000/rectangle/${deletedRectangles.join(',')}`)
+        .then((res) => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   },
 
   mounted () {
-    axios.get('http://localhost:3000/rectangle/all')
-      .then(res => {
-        this.rectangleList = this.adjustData(res.data)
-        console.log(this.rectangleList)
-      })
-      .catch(err => console.log(err))
-
+    this.fetchAllRectangles()
     this.initKeyEventHandler()
   }
 

@@ -27,5 +27,13 @@ router.put('/:id', (req, res, next) => {
   });
 });
 
+router.delete('/:id', function(req, res, next) {
+  console.log('deleted - ', req.params.id.split(','))
+  Rectangle.deleteMany({id: { $in: req.params.id.split(',')}}, (err, post) => {
+    if (err) return next(err);
+    res.json(post);
+  });
+});
+
 
 module.exports = router;
