@@ -33,7 +33,7 @@ export default {
     drawRectangle (evt) {
       if (!this.drawnRectangle) return
       
-      const indent = 1 // отступ от указателя мыши
+      const indent = 5 // отступ от указателя мыши, что бы исключить клик по прямоугольнику
       const deltaX = evt.offsetX - parseInt(this.drawnRectangle.positionX)
       const deltaY = evt.offsetY - parseInt(this.drawnRectangle.positionY)
 
@@ -54,16 +54,33 @@ export default {
       this.drawnRectangle = null
     },
 
+    activateRectangle (payload) {
+      let rectIndex = 0
+      let rect = this.rectangleList.find((rect, index) => {
+        if (rect.id === payload.id) {
+          rectIndex = index
+          return true
+        }
+      })
+      rect.active = !rect.active // toggle
+      // если активирован, то вытаскиваем его наверх
+      if (rect.active) {
+        this.rectangleList.splice(rectIndex, 1)
+        this.rectangleList.push(rect) 
+      }
+    },
+
     deleteRectangles () {
-      console.log('delete')
+      this.rectangleList = this.rectangleList.filter((rect) => !rect.active)
     },
 
     initKeyEventHandler () {
       document.onkeydown = (evt) => {
-        evt = evt || window.event
-        if (evt.keyCode === 27) {
+        const event = evt || window.event
+        
+        if (event.keyCode === 27) { // escape
           this.cancelDrawRectangle()
-        } else if (evt.keyCode === 46) {
+        } else if (event.keyCode === 46) { // delete
           this.deleteRectangles()
         }
       }

@@ -1,8 +1,18 @@
-<div id="desktop" class="component__desktop" v-on:click.self="createRectangle($event)" v-on:mousemove="drawRectangle($event)" v-on:delete>
+<div 
+  id="desktop" 
+  class="component__desktop" 
+
+  v-on:click.self = "createRectangle($event)" 
+  v-on:mousemove = "drawRectangle($event)" 
+  v-on:delete
+>
+  
   <rectangle
-    v-for="rect in rectangleList"
-    v-bind:rect="rect"
-    v-bind:key="rect._id"
+    v-for = "rectangle in rectangleList"
+    v-bind:data = "rectangle"
+    v-bind:key = "rectangle._id"
+    v-on:activate = "activateRectangle"
   >
   </rectangle>
+
 </div>

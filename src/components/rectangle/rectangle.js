@@ -2,16 +2,17 @@ import Desktop from '../desktop/Desktop.vue'
 
 export default {
   name: 'Rectangle',
-  props: ['rect'],
+  props: ['data'],
   parent: Desktop,
   
-  data (x, y) {
+  data (x = 0, y = 0) {
     return {
-      positionX: x || 0,
-      positionY: y || 0,
+      id: (() => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15))(),
+      positionX: x,
+      positionY: y,
       width: 10,
       height: 10,
-      backgroundColor: '#fff',
+      backgroundColor: (() => '#' + Math.random().toString(16).slice(2, 8))(),
       active: false,
       deleted: false
     }
@@ -19,7 +20,7 @@ export default {
 
   methods: {
     onRectangleClick () {
-      
+      this.$emit('activate', { id: this.data.id })
     }
   }
 }

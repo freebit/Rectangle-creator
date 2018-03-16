@@ -1,12 +1,13 @@
-<div 
+<div
+  v-bind:id = "data.id"
   class="rectangle"
-  v-bind:class="rect.active ? 'active':''"
+  v-bind:class="data.active ? 'active':''"
   v-bind:style="{ 
-    top: rect.positionY + 'px', 
-    left: rect.positionX + 'px', 
-    width: rect.width + 'px', 
-    height: rect.height + 'px', 
-    'background-color': rect.backgroundColor
+    top: data.positionY + 'px', 
+    left: data.positionX + 'px', 
+    width: data.width + 'px', 
+    height: data.height + 'px', 
+    'background-color': data.backgroundColor
   }"
-  v-on:click.self.stop="onRectangleClick()"
+  v-on:dblclick.self="onRectangleClick"
 ></div>
