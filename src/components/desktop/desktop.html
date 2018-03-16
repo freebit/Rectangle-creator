@@ -1,4 +1,4 @@
-<div id="desktop" class="component__desktop" v-on:click.self="createRectangle($event)">
+<div id="desktop" class="component__desktop" v-on:click.self="createRectangle($event)" v-on:mousemove="drawRectangle($event)" v-on:delete>
   <rectangle
     v-for="rect in rectangleList"
     v-bind:rect="rect"

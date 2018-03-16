@@ -1,3 +1,12 @@
-<div class="rectangle" style="position: absolute"
-  v-bind:style="{ top: rect.positionY, left: rect.positionX, width: rect.width, height: rect.height, 'background-color': rect.backgroundColor}"
->{{ rect._id }}</div>
+<div 
+  class="rectangle"
+  v-bind:class="rect.active ? 'active':''"
+  v-bind:style="{ 
+    top: rect.positionY + 'px', 
+    left: rect.positionX + 'px', 
+    width: rect.width + 'px', 
+    height: rect.height + 'px', 
+    'background-color': rect.backgroundColor
+  }"
+  v-on:click.self.stop="onRectangleClick()"
+></div>
