@@ -6,18 +6,23 @@ export default {
   name: 'Desktop',
   
   components: {
-    rectangle: Rectangle
+    'rectangle-item': Rectangle
   },
   
   data () {
     return {
+      rectangleList: [],
       drawnRectangle: null,
-      activeRectangles: [],
-      rectangleList: []
+      dragData: {
+        draggedRectangle: null,
+        shiftX: 0,
+        shiftY: 0
+      }
     }
   },
 
   methods: {
+    
     createRectangle (evt) {
       // первый клик
       if (!this.drawnRectangle) {
@@ -26,15 +31,20 @@ export default {
         this.rectangleList.push(this.drawnRectangle)
       // второй клик
       } else { 
-        this.drawnRectangle = null  
-        this.saveRectangle()
+        if (Number(this.drawnRectangle.width) > 0 && Number(this.drawnRectangle.width) > 0) {
+          this.saveRectangle()
+        } else {
+          this.rectangleList.pop()
+        }
+
+        this.drawnRectangle = null
       }
     },
 
     drawRectangle (evt) {
       if (!this.drawnRectangle) return
       
-      const indent = 9 // отступ от указателя мыши, что бы исключить клик по прямоугольнику
+      const indent = 9 // отступ от указателя мыши, что бы исключить клик по прямоугольнику при завершении draw
       const deltaX = evt.offsetX - parseInt(this.drawnRectangle.positionX)
       const deltaY = evt.offsetY - parseInt(this.drawnRectangle.positionY)
 
@@ -63,12 +73,14 @@ export default {
           return true
         }
       })
+      
       rect.active = !rect.active // toggle
+      
       // если активирован, то вытаскиваем его наверх
-      if (rect.active) {
-        this.rectangleList.splice(rectIndex, 1)
-        this.rectangleList.push(rect) 
-      }
+      // if (rect.active) {
+      //   this.rectangleList.splice(rectIndex, 1)
+      //   this.rectangleList.push(rect) 
+      // }
     },
 
     initKeyEventHandler () {
@@ -103,17 +115,24 @@ export default {
         })
     },
 
-    deleteRectangles () {
-      const deletedRectangles = []
-      this.rectangleList = this.rectangleList.filter(rect => {
-        if (rect.active) {
-          deletedRectangles.push(rect.id)
-          return false
-        } else {
-          return true
-        }
-      })
-      
+    deleteRectangles (payload) {
+      let deletedRectangles = []
+
+      if (payload && payload.id) {
+        deletedRectangles.push(payload.id)
+        this.rectangleList = this.rectangleList.filter(rect => rect.id !== payload.id)
+      } else {
+        // фильтруем и собираем id
+        this.rectangleList = this.rectangleList.filter(rect => {
+          if (rect.active) {
+            deletedRectangles.push(rect.id)
+            return false
+          } else {
+            return true
+          }
+        })
+      }
+ 
       axios.delete(`http://localhost:3000/rectangle/${deletedRectangles.join(',')}`)
         .then((res) => {
           console.log(res)
@@ -121,6 +140,33 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+
+    updateRectangle (rectangle) {
+      axios.put('http://localhost:3000/rectangle', rectangle)
+        .then((res) => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+
+    onDragged (data) {
+      if (data.first) {
+        const elmentId = data.el.getAttribute('id')
+        this.dragData.draggedRectangle = this.rectangleList.find(rect => rect.id === elmentId)
+
+        this.dragData.shiftX = data.clientX - Number(this.dragData.draggedRectangle.positionX)
+        this.dragData.shiftY = data.clientY - Number(this.dragData.draggedRectangle.positionY)
+        return false
+      } else if (data.last) {
+        this.updateRectangle(this.dragData.draggedRectangle)
+        return false
+      } else {
+        this.dragData.draggedRectangle.positionX = String(data.clientX - this.dragData.shiftX)
+        this.dragData.draggedRectangle.positionY = String(data.clientY - this.dragData.shiftY)
+      }
     }
   },
 

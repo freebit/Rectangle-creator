@@ -4,7 +4,12 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+import VDragged from 'v-dragged'
+
 Vue.config.productionTip = false
+Vue.config.apiUrl = 'http://localhost:8080'
+
+Vue.use(VDragged)
 
 /* eslint-disable no-new */
 new Vue({

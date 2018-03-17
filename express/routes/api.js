@@ -20,15 +20,14 @@ router.post('/', (req, res, next) => {
 });
 
 // обновляем прямоугольник
-router.put('/:id', (req, res, next) => {
-  Rectangle.findByIdAndUpdate(req.params.id, req.body, (err, post) => {
+router.put('/', (req, res, next) => {
+  Rectangle.findByIdAndUpdate(req.body._id, req.body, (err, post) => {
     if (err) return next(err);
     res.json(post);
   });
 });
 
 router.delete('/:id', function(req, res, next) {
-  console.log('deleted - ', req.params.id.split(','))
   Rectangle.deleteMany({id: { $in: req.params.id.split(',')}}, (err, post) => {
     if (err) return next(err);
     res.json(post);

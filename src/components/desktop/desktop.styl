@@ -1,5 +1,23 @@
 @import '../../assets/css/variables.styl'
+
 .component__desktop
   position relative
   height 100%
-  background-color $desktopBackgroundColor
+  overflow hidden
+  
+  header
+    display flex
+    align-items center
+    position relative
+    box-sizing border-box
+    padding 0 16px
+    width 100%
+    height 35px
+    background-color rgba($desktopBackgroundColor, .3)
+
+    h1
+      margin 0
+      font-family Helvetica, sans-serif
+      font-size 16px
+      font-weight 200
+      user-select none

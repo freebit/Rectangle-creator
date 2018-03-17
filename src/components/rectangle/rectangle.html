@@ -1,13 +1,15 @@
 <div
   v-bind:id = "data.id"
-  class="rectangle"
-  v-bind:class="data.active ? 'active':''"
-  v-bind:style="{ 
+  class = "rectangle"
+  v-bind:class = "data.active ? 'active':''"
+  v-bind:style = "{ 
     top: data.positionY + 'px', 
     left: data.positionX + 'px', 
     width: data.width + 'px', 
     height: data.height + 'px', 
     'background-color': data.backgroundColor
   }"
-  v-on:dblclick.self="onRectangleClick"
-></div>
+  v-on:dblclick.self.stop.prevent = "onRectangleClick"
+>
+<div class="closer" v-on:click.self.stop = "onCloserClick">&times;</div>
+</div>

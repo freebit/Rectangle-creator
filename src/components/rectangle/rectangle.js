@@ -1,7 +1,7 @@
 import Desktop from '../desktop/Desktop.vue'
 
 export default {
-  name: 'Rectangle',
+  name: 'rectangle-item',
   props: ['data'],
   parent: Desktop,
   
@@ -21,6 +21,10 @@ export default {
   methods: {
     onRectangleClick () {
       this.$emit('activate', { id: this.data.id })
+    },
+
+    onCloserClick () {
+      this.$emit('close', { id: this.data.id })
     }
   }
 }
