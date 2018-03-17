@@ -1,11 +1,14 @@
 import axios from 'axios'
 import { omit } from 'lodash'
+
+import Header from '../header/Header.vue'
 import Rectangle from '../rectangle/Rectangle.vue'
 
 export default {
   name: 'Desktop',
   
   components: {
+    'desktop-header': Header,
     'rectangle-item': Rectangle
   },
   
@@ -31,7 +34,7 @@ export default {
         this.rectangleList.push(this.drawnRectangle)
       // второй клик
       } else { 
-        if (Number(this.drawnRectangle.width) > 0 && Number(this.drawnRectangle.width) > 0) {
+        if (Number(this.drawnRectangle.width) > 0 && Number(this.drawnRectangle.height) > 0) {
           this.saveRectangle()
         } else {
           this.rectangleList.pop()
@@ -118,11 +121,11 @@ export default {
     deleteRectangles (payload) {
       let deletedRectangles = []
 
+      // фильтруем и собираем id удалямых
       if (payload && payload.id) {
         deletedRectangles.push(payload.id)
         this.rectangleList = this.rectangleList.filter(rect => rect.id !== payload.id)
       } else {
-        // фильтруем и собираем id
         this.rectangleList = this.rectangleList.filter(rect => {
           if (rect.active) {
             deletedRectangles.push(rect.id)
@@ -142,6 +145,10 @@ export default {
         })
     },
 
+    clearAll () {
+      this.rectangleList = []
+    },
+
     updateRectangle (rectangle) {
       axios.put('http://localhost:3000/rectangle', rectangle)
         .then((res) => {
@@ -154,8 +161,8 @@ export default {
 
     onDragged (data) {
       if (data.first) {
-        const elmentId = data.el.getAttribute('id')
-        this.dragData.draggedRectangle = this.rectangleList.find(rect => rect.id === elmentId)
+        const elementId = data.el.getAttribute('id')
+        this.dragData.draggedRectangle = this.rectangleList.find(rect => rect.id === elementId)
 
         this.dragData.shiftX = data.clientX - Number(this.dragData.draggedRectangle.positionX)
         this.dragData.shiftY = data.clientY - Number(this.dragData.draggedRectangle.positionY)

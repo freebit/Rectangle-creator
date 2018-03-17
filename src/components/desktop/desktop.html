@@ -6,10 +6,8 @@
   v-on:mousemove = "drawRectangle($event)" 
   v-on:delete
 >
-<header>
-  <h1>Rectangles creator v0.0.1</h1>
-</header>
-<transition-group name="fade">
+<desktop-header v-on:clear-all = "clearAll"></desktop-header>
+<transition-group name = "fade">
   <rectangle-item v-dragged.capture = "onDragged"
     v-for = "rectangle in rectangleList"
     v-bind:data = "rectangle"

@@ -9,7 +9,7 @@
     height: data.height + 'px', 
     'background-color': data.backgroundColor
   }"
-  v-on:dblclick.self.stop.prevent = "onRectangleClick"
+  v-on:dblclick.stop = "onRectangleClick"
 >
 <div class="closer" v-on:click.self.stop = "onCloserClick">&times;</div>
 </div>
