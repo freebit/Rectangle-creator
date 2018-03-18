@@ -1,6 +1,16 @@
-<header>
-  <h1 v-once>{{ title }} <ins class="version" v-once>{{ version }}</ins></h1>
+<header v-bind:class="state.open ? `open` : ``">
+  <h1 class='logo' v-once>{{ title }} <ins class="version" v-once>{{ version }}</ins></h1>
+  <section class="info">
+    <ol class='info__list'>
+      <li>Клик - начало отрисовки фигуры</li>
+      <li>Второй клик - завершение отрисовки</li>
+      <li>Esc - отмена отрисовки фигуры</li>
+      <li>Двойной клик - выделение фигуры</li>
+      <li>Delete - удаление выделенных фигур</li>
+    </ol>
+  </section>
   <section class='panel'>
+    <button v-on:click.stop="(state.open=!state.open)">{{ state.open ? 'close info' : 'info' }}</button>
     <button v-on:click.stop="clearAll">clear all</button>
   </section>
 </header>

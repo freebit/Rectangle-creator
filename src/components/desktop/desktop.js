@@ -19,7 +19,8 @@ export default {
       dragData: {
         draggedRectangle: null,
         shiftX: 0,
-        shiftY: 0
+        shiftY: 0,
+        wasShifted: false
       }
     }
   },
@@ -168,11 +169,15 @@ export default {
         this.dragData.shiftY = data.clientY - Number(this.dragData.draggedRectangle.positionY)
         return false
       } else if (data.last) {
-        this.updateRectangle(this.dragData.draggedRectangle)
+        if (this.dragData.wasShifted) {
+          this.updateRectangle(this.dragData.draggedRectangle)
+          this.dragData.wasShifted = false
+        } 
         return false
       } else {
         this.dragData.draggedRectangle.positionX = String(data.clientX - this.dragData.shiftX)
         this.dragData.draggedRectangle.positionY = String(data.clientY - this.dragData.shiftY)
+        this.dragData.wasShifted = (data.offsetX !== 0 || data.offsetY !== 0)
       }
     }
   },

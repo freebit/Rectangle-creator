@@ -7,8 +7,12 @@ export default {
   
   data () {
     return {
-      title: 'Rectangles creator',
-      version: 'v0.0.1'
+      title: 'Rect',
+      version: 'v0.0.1',
+
+      state: {
+        open: false
+      }
     }
   },
 
@@ -17,8 +21,8 @@ export default {
       this.$emit('clear-all')
     },
 
-    onCloserClick () {
-      this.$emit('close', { id: this.data.id })
+    onInfoClick () {
+      
     }
   }
 }
