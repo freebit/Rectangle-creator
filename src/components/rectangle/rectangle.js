@@ -25,6 +25,10 @@ export default {
 
     onCloserClick () {
       this.$emit('close', { id: this.data.id })
+    },
+
+    onExpanderClick () {
+      this.$emit('init-draw', { id: this.data.id })
     }
   }
 }

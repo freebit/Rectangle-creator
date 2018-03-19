@@ -6,11 +6,12 @@
       <li>Второй клик - завершение отрисовки</li>
       <li>Esc - отмена отрисовки фигуры</li>
       <li>Двойной клик - выделение фигуры</li>
+      <!-- <li>Клик по нижнему правому углу - отрисовка фигуры</li> -->
       <li>Delete - удаление выделенных фигур</li>
     </ol>
   </section>
   <section class='panel'>
     <button v-on:click.stop="(state.open=!state.open)">{{ state.open ? 'close info' : 'info' }}</button>
-    <button v-on:click.stop="clearAll">clear all</button>
+    <button v-on:click.stop="clearAll">clear desktop</button>
   </section>
 </header>

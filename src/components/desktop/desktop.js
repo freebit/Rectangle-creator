@@ -36,13 +36,23 @@ export default {
       // второй клик
       } else { 
         if (Number(this.drawnRectangle.width) > 0 && Number(this.drawnRectangle.height) > 0) {
-          this.saveRectangle()
+          if (!this.drawnRectangle._id) {
+            this.saveRectangle()
+          } else {
+            this.updateRectangle(this.drawnRectangle)
+          }
         } else {
           this.rectangleList.pop()
         }
 
         this.drawnRectangle = null
       }
+    },
+
+    initDraw (payload) {
+      console.log('init draw with - ', payload)
+
+      this.drawnRectangle = this.rectangleList.find(rect => rect.id === payload.id)
     },
 
     drawRectangle (evt) {
@@ -136,7 +146,9 @@ export default {
           }
         })
       }
- 
+      
+      if (!deletedRectangles.length) return
+
       axios.delete(`http://localhost:3000/rectangle/${deletedRectangles.join(',')}`)
         .then((res) => {
           console.log(res)
