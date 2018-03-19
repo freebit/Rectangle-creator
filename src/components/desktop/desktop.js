@@ -112,7 +112,9 @@ export default {
     fetchAllRectangles () {
       axios.get('http://localhost:3000/rectangle/all')
         .then(res => {
-          this.rectangleList = this.adjustData(res.data)
+          if (res.data && res.data.length) {
+            this.rectangleList = this.adjustData(res.data)
+          }
         })
         .catch(err => console.log(err))
     },
