@@ -2,7 +2,7 @@
   id="desktop" 
   class="component__desktop" 
 
-  v-on:click = "createRectangle($event)" 
+  v-on:mouseup = "createRectangle($event)" 
   v-on:mousemove = "drawRectangle($event)"
 >
 <desktop-header v-on:clear-all = "clearAll"></desktop-header>

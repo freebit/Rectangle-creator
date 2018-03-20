@@ -44,7 +44,6 @@ export default {
         this.dragData.startX = clientX
         this.dragData.startY = clientY
         this.rectangleList.push(this.drawData.drawnRectangle)
-        console.log(evt)
       // второй клик
       } else { 
         if (Number(this.drawData.drawnRectangle.width) > 0 && Number(this.drawData.drawnRectangle.height) > 0) {
@@ -105,6 +104,8 @@ export default {
       if (!this.drawData.drawnRectangle) return
       this.rectangleList.pop()
       this.drawData.drawnRectangle = null
+      this.dragData.startX = null
+      this.dragData.startY = null
     },
 
     activateRectangle (payload) {
@@ -226,12 +227,16 @@ export default {
         if (this.dragData.wasShifted) {
           this.updateRectangle(this.dragData.draggedRectangle)
           this.dragData.wasShifted = false
+
+          this.cancelDrawRectangle()
+          console.log('cancel draw')
         } 
         return false
       } else {
         this.dragData.draggedRectangle.positionX = String(data.clientX - this.dragData.shiftX)
         this.dragData.draggedRectangle.positionY = String(data.clientY - this.dragData.shiftY)
         this.dragData.wasShifted = (data.offsetX !== 0 || data.offsetY !== 0)
+        this.cancelDrawRectangle()
       }
     }
   },
