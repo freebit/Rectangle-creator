@@ -39,11 +39,12 @@ export default {
     createRectangle (evt) {
       // первый клик
       if (!this.drawData.drawnRectangle) {
-        const {offsetX, offsetY} = evt
-        this.drawData.drawnRectangle = Rectangle.data(offsetX, offsetY)
-        this.dragData.startX = offsetX
-        this.dragData.startY = offsetY
+        const {clientX, clientY} = evt
+        this.drawData.drawnRectangle = Rectangle.data(clientX, clientY)
+        this.dragData.startX = clientX
+        this.dragData.startY = clientY
         this.rectangleList.push(this.drawData.drawnRectangle)
+        console.log(evt)
       // второй клик
       } else { 
         if (Number(this.drawData.drawnRectangle.width) > 0 && Number(this.drawData.drawnRectangle.height) > 0) {
@@ -63,8 +64,6 @@ export default {
     },
 
     initDraw (payload) {
-      console.log('init draw with - ', payload)
-
       this.drawData.drawnRectangle = this.rectangleList.find(rect => rect.id === payload.id)
     },
 
@@ -72,21 +71,21 @@ export default {
       if (!this.drawData.drawnRectangle) return
       
       const indent = 12 // отступ от указателя мыши, что бы исключить клик по прямоугольнику при завершении draw
-      const deltaX = evt.offsetX - this.dragData.startX
-      const deltaY = evt.offsetY - this.dragData.startY
+      const deltaX = evt.clientX - this.dragData.startX
+      const deltaY = evt.clientY - this.dragData.startY
 
       if (deltaX < 0 && deltaY > 0) {
-        this.drawData.drawnRectangle.positionX = evt.offsetX + indent
+        this.drawData.drawnRectangle.positionX = evt.clientX + indent
         this.drawData.drawnRectangle.width = Math.abs(deltaX)
         this.drawData.drawnRectangle.height = deltaY - indent
       } else if (deltaX < 0 && deltaY < 0) {
-        this.drawData.drawnRectangle.positionX = evt.offsetX + indent
+        this.drawData.drawnRectangle.positionX = evt.clientX + indent
         this.drawData.drawnRectangle.width = Math.abs(deltaX)
 
-        this.drawData.drawnRectangle.positionY = evt.offsetY + indent
+        this.drawData.drawnRectangle.positionY = evt.clientY + indent
         this.drawData.drawnRectangle.height = Math.abs(deltaY)
       } else if (deltaX > 0 && deltaY < 0) {
-        this.drawData.drawnRectangle.positionY = evt.offsetY + indent
+        this.drawData.drawnRectangle.positionY = evt.clientY + indent
         this.drawData.drawnRectangle.height = Math.abs(deltaY)
         this.drawData.drawnRectangle.width = deltaX - indent
       } else {
