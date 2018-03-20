@@ -28,7 +28,7 @@ app.use('/', express.static(path.join(__dirname, '../dist')));
 
 // разрешим CORS
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+  res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "json, X_REQUESTED_WITH, Content-Type");
   res.header("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PUT, DELETE");
   next();
