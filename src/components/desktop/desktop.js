@@ -78,7 +78,7 @@ export default {
       if (deltaX < 0 && deltaY > 0) {
         this.drawData.drawnRectangle.positionX = evt.offsetX + indent
         this.drawData.drawnRectangle.width = Math.abs(deltaX)
-        this.drawData.drawnRectangle.height = deltaY + indent
+        this.drawData.drawnRectangle.height = deltaY - indent
       } else if (deltaX < 0 && deltaY < 0) {
         this.drawData.drawnRectangle.positionX = evt.offsetX + indent
         this.drawData.drawnRectangle.width = Math.abs(deltaX)
@@ -88,7 +88,7 @@ export default {
       } else if (deltaX > 0 && deltaY < 0) {
         this.drawData.drawnRectangle.positionY = evt.offsetY + indent
         this.drawData.drawnRectangle.height = Math.abs(deltaY)
-        this.drawData.drawnRectangle.width = deltaX + indent
+        this.drawData.drawnRectangle.width = deltaX - indent
       } else {
         this.drawData.drawnRectangle.width = deltaX - indent
         this.drawData.drawnRectangle.height = deltaY - indent
@@ -190,7 +190,19 @@ export default {
     },
 
     clearAll () {
-      this.rectangleList = []
+      let deletedRectangles = this.rectangleList.reduce((result, current) => {
+        result += `${current.id},`
+        return result
+      }, '')
+
+      axios.delete(API_URL + `/rectangle/${deletedRectangles}`)
+        .then((res) => {
+          this.rectangleList = []
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
 
     updateRectangle (rectangle) {
