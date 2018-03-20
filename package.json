@@ -27,7 +27,8 @@
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "chalk": "^2.0.1",
-    "shelljs": "^0.7.8"
+    "shelljs": "^0.7.8",
+    "ora": "^1.2.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
