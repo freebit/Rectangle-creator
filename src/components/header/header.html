@@ -11,7 +11,7 @@
     </ol>
   </section>
   <section class='panel'>
-    <button v-on:click.stop="(state.open=!state.open)">{{ state.open ? 'close info' : 'info' }}</button>
-    <button v-on:click.stop="clearAll">clear desktop</button>
+    <button v-on:click.self.prevent="(state.open=!state.open)">{{ state.open ? 'close info' : 'info' }}</button>
+    <button v-on:click.self.prevent="clearAll">clear desktop</button>
   </section>
 </header>

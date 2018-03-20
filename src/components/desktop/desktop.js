@@ -25,6 +25,7 @@ export default {
         startX: null,
         startY: null
       },
+
       dragData: {
         draggedRectangle: null,
         shiftX: 0,
@@ -35,6 +36,10 @@ export default {
   },
 
   methods: {
+
+    handleComponent (str, e) {
+      console.log('gesture - ', str)
+    },
     
     createRectangle (evt) {
       // первый клик
@@ -44,16 +49,17 @@ export default {
         this.dragData.startX = clientX
         this.dragData.startY = clientY
         this.rectangleList.push(this.drawData.drawnRectangle)
+        console.log('click', evt)
       // второй клик
       } else { 
-        if (Number(this.drawData.drawnRectangle.width) > 0 && Number(this.drawData.drawnRectangle.height) > 0) {
-          if (!this.drawData.drawnRectangle._id) {
-            this.saveRectangle()
-          } else {
-            this.updateRectangle(this.drawData.drawnRectangle)
-          }
+        if (this.drawData.drawnRectangle && Number(this.drawData.drawnRectangle.width) > 0 && Number(this.drawData.drawnRectangle.height) > 0) {
+          // if (!this.drawData.drawnRectangle._id) {
+          this.saveRectangle()
+          // } else {
+          //   this.updateRectangle(this.drawData.drawnRectangle)
+          // }
         } else {
-          this.rectangleList.pop()
+          this.drawData.drawnRectangle && this.rectangleList.pop()
         }
 
         this.drawData.drawnRectangle = null
@@ -152,8 +158,18 @@ export default {
       const lastRectangle = this.rectangleList.slice(-1)[0]
       
       axios.post(API_URL + '/rectangle', lastRectangle)
-        .then((res) => {
-          console.log(res)
+        .then(({data}) => {
+          console.log(data)
+          let index = null
+          this.rectangleList.find((rect, idx) => {
+            if (rect.id === data.id) {
+              index = idx
+              // rect._id = data._id
+              // debugger
+              return true
+            }
+          })
+          index && (this.rectangleList[index]._id = data._id)
         })
         .catch(err => {
           console.log(err)
@@ -224,22 +240,21 @@ export default {
 
         this.dragData.shiftX = data.clientX - Number(this.dragData.draggedRectangle.positionX)
         this.dragData.shiftY = data.clientY - Number(this.dragData.draggedRectangle.positionY)
-        //this.cancelDrawRectangle()
+        // this.cancelDrawRectangle()
         return false
       } else if (data.last) {
+        console.log('drag end wasshifted - ', this.dragData.wasShifted)
         if (this.dragData.wasShifted) {
           this.updateRectangle(this.dragData.draggedRectangle)
           this.dragData.wasShifted = false
-
-          this.cancelDrawRectangle()
-          console.log('cancel draw')
         } 
+        this.cancelDrawRectangle()
         return false
       } else {
         this.dragData.draggedRectangle.positionX = String(data.clientX - this.dragData.shiftX)
         this.dragData.draggedRectangle.positionY = String(data.clientY - this.dragData.shiftY)
         this.dragData.wasShifted = (data.offsetX !== 0 || data.offsetY !== 0)
-       // this.cancelDrawRectangle()
+        // this.cancelDrawRectangle()
       }
     }
   },

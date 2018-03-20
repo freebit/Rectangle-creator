@@ -29,6 +29,10 @@ export default {
 
     onExpanderClick () {
       this.$emit('init-draw', { id: this.data.id })
+    },
+
+    handleComponent (str, e) {
+      console.log('gesture - ', str)
     }
   }
 }
