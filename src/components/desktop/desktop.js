@@ -122,7 +122,7 @@ export default {
     saveRectangle () {
       const lastRectangle = this.rectangleList.slice(-1)[0]
       
-      axios.post('http://localhost:3000/rectangle', lastRectangle)
+      axios.post('/rectangle', lastRectangle)
         .then((res) => {
           console.log(res)
         })
@@ -151,7 +151,7 @@ export default {
       
       if (!deletedRectangles.length) return
 
-      axios.delete(`http://localhost:3000/rectangle/${deletedRectangles.join(',')}`)
+      axios.delete(`/rectangle/${deletedRectangles.join(',')}`)
         .then((res) => {
           console.log(res)
         })
@@ -165,7 +165,7 @@ export default {
     },
 
     updateRectangle (rectangle) {
-      axios.put('http://localhost:3000/rectangle', rectangle)
+      axios.put('/rectangle', rectangle)
         .then((res) => {
           console.log(res)
         })
