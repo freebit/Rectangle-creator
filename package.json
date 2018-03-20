@@ -26,6 +26,7 @@
     "v-dragged": "0.0.5",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
+    "vue-template-compiler": "^2.5.2",
     "chalk": "^2.0.1",
     "shelljs": "^0.7.8",
     "ora": "^1.2.0",
