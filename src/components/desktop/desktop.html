@@ -3,8 +3,7 @@
   class="component__desktop" 
 
   v-on:click.self = "createRectangle($event)" 
-  v-on:mousemove = "drawRectangle($event)" 
-  v-on:delete
+  v-on:mousemove.self = "drawRectangle($event)"
 >
 <desktop-header v-on:clear-all = "clearAll"></desktop-header>
 <transition-group name = "fade">

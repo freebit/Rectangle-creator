@@ -4,6 +4,10 @@ import { omit } from 'lodash'
 import Header from '../header/Header.vue'
 import Rectangle from '../rectangle/Rectangle.vue'
 
+import Config from '../../../config/index'
+
+const API_URL = Config[(process.env.NODE_ENV === 'development' ? 'dev' : 'build')].apiUrl
+
 export default {
   name: 'Desktop',
   
@@ -15,7 +19,12 @@ export default {
   data () {
     return {
       rectangleList: [],
-      drawnRectangle: null,
+
+      drawData: {
+        drawnRectangle: null,
+        startX: null,
+        startY: null
+      },
       dragData: {
         draggedRectangle: null,
         shiftX: 0,
@@ -29,41 +38,61 @@ export default {
     
     createRectangle (evt) {
       // первый клик
-      if (!this.drawnRectangle) {
+      if (!this.drawData.drawnRectangle) {
         const {offsetX, offsetY} = evt
-        this.drawnRectangle = Rectangle.data(offsetX, offsetY)
-        this.rectangleList.push(this.drawnRectangle)
+        this.drawData.drawnRectangle = Rectangle.data(offsetX, offsetY)
+        this.dragData.startX = offsetX
+        this.dragData.startY = offsetY
+        this.rectangleList.push(this.drawData.drawnRectangle)
       // второй клик
       } else { 
-        if (Number(this.drawnRectangle.width) > 0 && Number(this.drawnRectangle.height) > 0) {
-          if (!this.drawnRectangle._id) {
+        if (Number(this.drawData.drawnRectangle.width) > 0 && Number(this.drawData.drawnRectangle.height) > 0) {
+          if (!this.drawData.drawnRectangle._id) {
             this.saveRectangle()
           } else {
-            this.updateRectangle(this.drawnRectangle)
+            this.updateRectangle(this.drawData.drawnRectangle)
           }
         } else {
           this.rectangleList.pop()
         }
 
-        this.drawnRectangle = null
+        this.drawData.drawnRectangle = null
+        this.dragData.startX = null
+        this.dragData.startY = null
       }
     },
 
     initDraw (payload) {
       console.log('init draw with - ', payload)
 
-      this.drawnRectangle = this.rectangleList.find(rect => rect.id === payload.id)
+      this.drawData.drawnRectangle = this.rectangleList.find(rect => rect.id === payload.id)
     },
 
     drawRectangle (evt) {
-      if (!this.drawnRectangle) return
+      if (!this.drawData.drawnRectangle) return
       
-      const indent = 9 // отступ от указателя мыши, что бы исключить клик по прямоугольнику при завершении draw
-      const deltaX = evt.offsetX - parseInt(this.drawnRectangle.positionX)
-      const deltaY = evt.offsetY - parseInt(this.drawnRectangle.positionY)
+      const indent = 12 // отступ от указателя мыши, что бы исключить клик по прямоугольнику при завершении draw
+      const deltaX = evt.offsetX - this.dragData.startX
+      const deltaY = evt.offsetY - this.dragData.startY
 
-      this.drawnRectangle.width = deltaX - indent
-      this.drawnRectangle.height = deltaY - indent
+      if (deltaX < 0 && deltaY > 0) {
+        this.drawData.drawnRectangle.positionX = evt.offsetX + indent
+        this.drawData.drawnRectangle.width = Math.abs(deltaX)
+        this.drawData.drawnRectangle.height = deltaY + indent
+      } else if (deltaX < 0 && deltaY < 0) {
+        this.drawData.drawnRectangle.positionX = evt.offsetX + indent
+        this.drawData.drawnRectangle.width = Math.abs(deltaX)
+
+        this.drawData.drawnRectangle.positionY = evt.offsetY + indent
+        this.drawData.drawnRectangle.height = Math.abs(deltaY)
+      } else if (deltaX > 0 && deltaY < 0) {
+        this.drawData.drawnRectangle.positionY = evt.offsetY + indent
+        this.drawData.drawnRectangle.height = Math.abs(deltaY)
+        this.drawData.drawnRectangle.width = deltaX + indent
+      } else {
+        this.drawData.drawnRectangle.width = deltaX - indent
+        this.drawData.drawnRectangle.height = deltaY - indent
+      }
     },
 
     adjustData (data) {
@@ -74,9 +103,9 @@ export default {
     },
 
     cancelDrawRectangle () {
-      if (!this.drawnRectangle) return
+      if (!this.drawData.drawnRectangle) return
       this.rectangleList.pop()
-      this.drawnRectangle = null
+      this.drawData.drawnRectangle = null
     },
 
     activateRectangle (payload) {
@@ -110,7 +139,7 @@ export default {
     },
 
     fetchAllRectangles () {
-      axios.get('/rectangle/all')
+      axios.get(API_URL + '/rectangle/all')
         .then(res => {
           if (res.data && res.data.length) {
             this.rectangleList = this.adjustData(res.data)
@@ -122,7 +151,7 @@ export default {
     saveRectangle () {
       const lastRectangle = this.rectangleList.slice(-1)[0]
       
-      axios.post('/rectangle', lastRectangle)
+      axios.post(API_URL + '/rectangle', lastRectangle)
         .then((res) => {
           console.log(res)
         })
@@ -151,7 +180,7 @@ export default {
       
       if (!deletedRectangles.length) return
 
-      axios.delete(`/rectangle/${deletedRectangles.join(',')}`)
+      axios.delete(API_URL + `/rectangle/${deletedRectangles.join(',')}`)
         .then((res) => {
           console.log(res)
         })
@@ -165,7 +194,7 @@ export default {
     },
 
     updateRectangle (rectangle) {
-      axios.put('/rectangle', rectangle)
+      axios.put(API_URL + '/rectangle', rectangle)
         .then((res) => {
           console.log(res)
         })
