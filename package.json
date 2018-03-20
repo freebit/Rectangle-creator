@@ -25,7 +25,8 @@
     "serve-favicon": "^2.4.5",
     "v-dragged": "0.0.5",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "chalk": "^2.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
