@@ -57,6 +57,7 @@
     "file-loader": "^1.1.4",
     "postcss-import": "^11.0.0",
     "postcss-loader": "^2.0.8",
+    "postcss-url": "^7.2.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "vue-loader": "^13.3.0",
