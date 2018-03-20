@@ -177,6 +177,8 @@ export default {
           }
         })
       }
+
+      this.cancelDrawRectangle()
       
       if (!deletedRectangles.length) return
 
@@ -222,6 +224,7 @@ export default {
 
         this.dragData.shiftX = data.clientX - Number(this.dragData.draggedRectangle.positionX)
         this.dragData.shiftY = data.clientY - Number(this.dragData.draggedRectangle.positionY)
+        //this.cancelDrawRectangle()
         return false
       } else if (data.last) {
         if (this.dragData.wasShifted) {
@@ -236,7 +239,7 @@ export default {
         this.dragData.draggedRectangle.positionX = String(data.clientX - this.dragData.shiftX)
         this.dragData.draggedRectangle.positionY = String(data.clientY - this.dragData.shiftY)
         this.dragData.wasShifted = (data.offsetX !== 0 || data.offsetY !== 0)
-        this.cancelDrawRectangle()
+       // this.cancelDrawRectangle()
       }
     }
   },
