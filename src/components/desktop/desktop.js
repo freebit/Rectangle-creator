@@ -1,4 +1,4 @@
-import Vue from 'vue'
+
 import axios from 'axios'
 import { omit } from 'lodash'
 
@@ -50,7 +50,6 @@ export default {
         this.dragData.startX = clientX
         this.dragData.startY = clientY
         this.rectangleList.push(this.drawData.drawnRectangle)
-        console.log('click', this.drawData.drawnRectangle)
       // второй клик
       } else { 
         if (this.drawData.drawnRectangle && Number(this.drawData.drawnRectangle.width) > 0 && Number(this.drawData.drawnRectangle.height) > 0) {
@@ -141,6 +140,8 @@ export default {
           this.cancelDrawRectangle()
         } else if (event.keyCode === 46) { // delete
           this.deleteRectangles()
+        } else if (event.keyCode === 90 && event.ctrlKey === true) { //
+          console.log('ctrl+z')
         }
       }
     },
@@ -168,7 +169,7 @@ export default {
               return true
             }
           })
-          Vue.set(this.rectangleList[index], '_id', data._id)
+          this.$set(this.rectangleList[index], '_id', data._id)
         })
         .catch(err => {
           console.log(err)
