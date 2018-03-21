@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import axios from 'axios'
 import { omit } from 'lodash'
 
@@ -49,7 +50,7 @@ export default {
         this.dragData.startX = clientX
         this.dragData.startY = clientY
         this.rectangleList.push(this.drawData.drawnRectangle)
-        console.log('click', evt)
+        console.log('click', this.drawData.drawnRectangle)
       // второй клик
       } else { 
         if (this.drawData.drawnRectangle && Number(this.drawData.drawnRectangle.width) > 0 && Number(this.drawData.drawnRectangle.height) > 0) {
@@ -164,12 +165,10 @@ export default {
           this.rectangleList.find((rect, idx) => {
             if (rect.id === data.id) {
               index = idx
-              // rect._id = data._id
-              // debugger
               return true
             }
           })
-          index && (this.rectangleList[index]._id = data._id)
+          Vue.set(this.rectangleList[index], '_id', data._id)
         })
         .catch(err => {
           console.log(err)
@@ -240,21 +239,19 @@ export default {
 
         this.dragData.shiftX = data.clientX - Number(this.dragData.draggedRectangle.positionX)
         this.dragData.shiftY = data.clientY - Number(this.dragData.draggedRectangle.positionY)
-        // this.cancelDrawRectangle()
         return false
       } else if (data.last) {
-        console.log('drag end wasshifted - ', this.dragData.wasShifted)
         if (this.dragData.wasShifted) {
           this.updateRectangle(this.dragData.draggedRectangle)
           this.dragData.wasShifted = false
+          this.cancelDrawRectangle()
         } 
-        this.cancelDrawRectangle()
+        
         return false
       } else {
         this.dragData.draggedRectangle.positionX = String(data.clientX - this.dragData.shiftX)
         this.dragData.draggedRectangle.positionY = String(data.clientY - this.dragData.shiftY)
         this.dragData.wasShifted = (data.offsetX !== 0 || data.offsetY !== 0)
-        // this.cancelDrawRectangle()
       }
     }
   },
